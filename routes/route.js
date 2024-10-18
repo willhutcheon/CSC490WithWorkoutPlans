@@ -13,3 +13,6 @@ router.get("/recommendations", controller.getRecommendedPlans);
 router.post("/feedback", controller.submitPlanFeedback);
 
 module.exports = router;
+
+
+// TODO: add decaying epsilon so that the model explores less as it learns more from user feedback

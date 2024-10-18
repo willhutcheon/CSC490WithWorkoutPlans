@@ -301,5 +301,59 @@ CREATE TABLE IF NOT EXISTS user_plan_history (
 );
 
 
+
+
+INSERT INTO user_preferences (preference_id, user_id, preferred_types, preferred_intensity, preferred_duration, preferred_exercise)
+VALUES
+(1, 7572, 'Weightlifting', 'High', 60, 'Squat'),
+(2, 9014, 'Running', 'Low', 30, 'Treadmill'),
+(3, 2710, 'Bodybuilding', 'Medium', 45, 'Bench Press'),
+(4, 3601, 'Powerlifting', 'High', 90, 'Deadlift'),
+(5, 2624, 'Cycling', 'Medium', 45, 'Stationary Bike');
+
+INSERT INTO workout_plans (plan_id, user_id, start_date, end_date, active)
+VALUES
+(1, 7572, '2024-01-01', '2024-01-31', true),
+(2, 9014, '2024-02-01', '2024-02-28', true),
+(3, 2710, '2024-03-01', '2024-03-31', true),
+(4, 3601, '2024-04-01', '2024-04-30', true),
+(5, 2624, '2024-05-01', '2024-05-31', true);
+
+INSERT INTO workouts (workout_id, plan_id, exercise_name, intensity, duration)
+VALUES
+(1, 1, 'Squat', 'High', 60),
+(2, 1, 'Bench Press', 'High', 60),
+(3, 2, 'Running', 'Low', 30),
+(4, 2, 'Treadmill', 'Low', 30),
+(5, 3, 'Cycling', 'Medium', 45),
+(6, 3, 'Stationary Bike', 'Medium', 45),
+(7, 4, 'Deadlift', 'High', 90),
+(8, 5, 'Cycling', 'Medium', 45);
+
+INSERT INTO exercises (exercise_id, workout_id, api_id, plan_sets, plan_reps, plan_weight, rest_time, exercise_name)
+VALUES
+(1, 1, 101, 4, 10, 100.0, 120, 'Squat'),
+(2, 1, 102, 3, 12, 75.0, 90, 'Bench Press'),
+(3, 3, 103, 1, 0, 0, 0, 'Running'),
+(4, 4, 104, 1, 0, 0, 0, 'Treadmill'),
+(5, 5, 105, 3, 15, 0, 60, 'Stationary Bike'),
+(6, 7, 106, 5, 5, 200.0, 180, 'Deadlift');
+
+INSERT INTO user_plan_feedback (user_id, plan_id, rating, total_calories_burned)
+VALUES
+(7572, 1, 5, 800),
+(9014, 2, 4, 300),
+(2710, 3, 3, 450),
+(3601, 4, 5, 1200),
+(2624, 5, 4, 500);
+
+INSERT INTO q_values (state, action, q_value)
+VALUES
+('Strength-Beginner', 1, 1.0),
+('Endurance-Advanced', 2, 0.8),
+('Hypertrophy-Beginner', 3, 0.9),
+('Strength-Advanced', 4, 1.2),
+('Endurance-Intermediate', 5, 1.0);
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

@@ -17,18 +17,22 @@
 
                 <h3>Workouts in this Plan:</h3>
                 <ul>
-                    <% plan.workouts.forEach(workout => { %>
-                        <li>
-                            <p>Workout ID: <%= workout.workout_id %></p>
-                            <p>Type: <%= workout.type %></p>
-                            <p>Intensity: <%= workout.intensity %></p>
-                            <p>Duration: <%= workout.duration %> minutes</p>
-                            <p>Exercise: <%= workout.exercise_name %></p>
-                        </li>
-                    <% }) %>
+                    <% if (plan.workouts && plan.workouts.length > 0) { %>
+                        <% plan.workouts.forEach(workout => { %>
+                            <li>
+                                <p>Workout ID: <%= workout.workout_id %></p>
+                                <p>Type: <%= workout.type %></p>
+                                <p>Intensity: <%= workout.intensity %></p>
+                                <p>Duration: <%= workout.duration %> minutes</p>
+                                <p>Exercise: <%= workout.exercise_name %></p>
+                            </li>
+                        <% }) %>
+                    <% } else { %>
+                        <li>No workouts available in this plan.</li>
+                    <% } %>
                 </ul>
                 
-                <!-- Button to provide feedback for this plan -->
+                <!-- Feedback form -->
                 <form action="/feedback" method="POST">
                     <input type="hidden" name="userId" value="<%= user.user_id %>">
                     <input type="hidden" name="planId" value="<%= plan.plan_id %>">
@@ -46,5 +50,10 @@
     <% } else { %>
         <p>No recommended workout plans available.</p>
     <% } %>
+
+    <h2>Debug Output:</h2>
+    <pre>
+        <%= JSON.stringify(plans, null, 2) %>
+    </pre>
 </body>
 </html>

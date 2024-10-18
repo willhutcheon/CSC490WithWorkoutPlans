@@ -44,6 +44,57 @@ async function getRecommendedPlans(req, res, next) {
     }
 }
 
+// ADDED
+/* async function getRecommendedPlans(req, res) {
+    const userId = req.query.user_id;  // Fetching user_id from the query
+
+    // Parse userId to an integer and check if it's valid
+    const parsedUserId = parseInt(userId, 10);
+
+    console.log("Parsed User ID:", parsedUserId, "Type:", typeof parsedUserId);
+
+    if (isNaN(parsedUserId)) {
+        return res.status(400).send('Invalid User ID');
+    }
+
+    try {
+        const plans = await model.getUserWorkoutPlans(parsedUserId);  // Pass the parsed userId
+
+        // Structure the data to have workouts grouped by plan
+        const structuredPlans = plans.reduce((acc, plan) => {
+            const { plan_id, start_date, end_date, active, workout_id, exercise_name, intensity, duration } = plan;
+
+            let planData = acc.find(p => p.plan_id === plan_id);
+            if (!planData) {
+                planData = {
+                    plan_id,
+                    start_date,
+                    end_date,
+                    active,
+                    workouts: []
+                };
+                acc.push(planData);
+            }
+
+            if (workout_id) {
+                planData.workouts.push({
+                    workout_id,
+                    exercise_name,
+                    intensity,
+                    duration
+                });
+            }
+
+            return acc;
+        }, []);
+
+        res.render('recommendations', { title: 'Workout Recommendations', plans: structuredPlans });
+    } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        res.status(500).send('Internal Server Error');
+    }
+} */
+
 async function submitPlanFeedback(req, res, next) {
     try {
         const { userId, planId, rating, totalCaloriesBurned } = req.body;

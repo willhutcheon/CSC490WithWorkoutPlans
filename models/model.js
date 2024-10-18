@@ -51,6 +51,31 @@ async function storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned
     return await db.run(sql, [userId, planId, rating, totalCaloriesBurned]);
 }
 
+// ADDDED
+async function getUserWorkoutPlans(userId) {
+    if (!userId || isNaN(userId)) {
+        throw new Error('Invalid User ID');
+    }
+
+    console.log("Fetching workout plans for User ID:", userId);
+    
+    return new Promise((resolve, reject) => {
+        db.all(`
+            SELECT wp.plan_id, wp.start_date, wp.end_date, wp.active,
+                   w.workout_id, w.exercise_name, w.intensity, w.duration
+            FROM workout_plans wp
+            LEFT JOIN workouts w ON wp.plan_id = w.plan_id
+            WHERE wp.user_id = ?`, [userId], (err, rows) => {
+                if (err) {
+                    console.error("SQL Error:", err);
+                    return reject(err);
+                }
+                resolve(rows);
+            });
+    });
+}
+
+
 // Q-table and reinforcement learning logic
 let QTable = {};
 
@@ -117,5 +142,6 @@ module.exports = {
     getWorkoutPlans,
     getUserPlanFeedback,
     storeUserPlanFeedback,
-    recommendWorkoutPlansWithRL
+    recommendWorkoutPlansWithRL,
+    getUserWorkoutPlans
 };

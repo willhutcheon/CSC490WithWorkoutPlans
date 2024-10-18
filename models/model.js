@@ -27,7 +27,36 @@ async function getWorkoutPlans(userId) {
         JOIN exercises e ON w.workout_id = e.workout_id
         WHERE wp.user_id = ? AND wp.active = true;
     `;
-    return await db.all(sql, [userId]);
+    //return await db.all(sql, [userId]);
+
+    // ADDED
+    const rows = await db.all(sql, [userId]);
+
+    const plans = {};
+    rows.forEach(row => {
+        const planId = row.plan_id;
+
+        // Initialize plan if it doesn't exist
+        if (!plans[planId]) {
+            plans[planId] = {
+                plan_id: planId,
+                start_date: row.start_date,
+                end_date: row.end_date,
+                workouts: []
+            };
+        }
+
+        // Push workout to the respective plan
+        plans[planId].workouts.push({
+            workout_id: row.workout_id,
+            intensity: row.intensity,
+            duration: row.duration,
+            exercise_name: row.exercise_name
+        });
+    });
+
+    // Convert plans object back to an array
+    return Object.values(plans);
 }
 
 // Fetch user feedback for a workout plan

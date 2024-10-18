@@ -21,7 +21,6 @@
                         <% plan.workouts.forEach(workout => { %>
                             <li>
                                 <p>Workout ID: <%= workout.workout_id %></p>
-                                <p>Type: <%= workout.type %></p>
                                 <p>Intensity: <%= workout.intensity %></p>
                                 <p>Duration: <%= workout.duration %> minutes</p>
                                 <p>Exercise: <%= workout.exercise_name %></p>
@@ -31,6 +30,7 @@
                         <li>No workouts available in this plan.</li>
                     <% } %>
                 </ul>
+                
                 
                 <!-- Feedback form -->
                 <form action="/feedback" method="POST">

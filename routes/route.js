@@ -16,4 +16,4 @@ module.exports = router;
 
 
 // TODO: add decaying epsilon so that the model explores less as it learns more from user feedback
-// TODO: individual q-values for users
+// TODO: individual q-values for users (done?)

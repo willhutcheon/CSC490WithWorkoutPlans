@@ -172,5 +172,9 @@ module.exports = {
     getUserPlanFeedback,
     storeUserPlanFeedback,
     recommendWorkoutPlansWithRL,
-    getUserWorkoutPlans
+    getUserWorkoutPlans,
+    calculateReward,
+    chooseAction,
+    updateQValue,
+    getQValue
 };

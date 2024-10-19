@@ -18,7 +18,7 @@ async function getAllUsers(req, res, next) {
 }
 
 // Reinforcement Learning for recommending workout plans
-async function getRecommendedPlans(req, res, next) {
+/* async function getRecommendedPlans(req, res, next) {
     try {
         const userId = parseInt(req.query.user_id, 10);
         if (isNaN(userId)) {
@@ -42,7 +42,39 @@ async function getRecommendedPlans(req, res, next) {
     } catch (error) {
         next(error);
     }
+} */
+
+// ADDED, above works
+async function getRecommendedPlans(req, res, next) {
+    try {
+        const userId = parseInt(req.query.user_id, 10);
+        if (isNaN(userId)) {
+            return res.status(400).send('Invalid User ID');
+        }
+
+        const userPreferences = await model.getUserPreferences(userId);
+        if (!userPreferences) {
+            return res.status(404).send('No preferences found for user.');
+        }
+
+        const workoutPlans = await model.getWorkoutPlans(userId);
+        if (!workoutPlans || workoutPlans.length === 0) {
+            return res.status(404).send('No workout plans available.');
+        }
+
+        // Use reinforcement learning to get recommended plan
+        const recommendedPlan = await model.recommendWorkoutPlansWithRL(userPreferences, workoutPlans, userId);
+
+        res.render("recommendations", {
+            title: 'Recommended Workout Plans',
+            plans: [recommendedPlan],  // Pass the recommended plan to the template
+            user: { user_id: userId }
+        });
+    } catch (error) {
+        next(error);
+    }
 }
+
 
 // ADDED
 /* async function getRecommendedPlans(req, res) {
@@ -95,7 +127,7 @@ async function getRecommendedPlans(req, res, next) {
     }
 } */
 
-async function submitPlanFeedback(req, res, next) {
+/* async function submitPlanFeedback(req, res, next) {
     try {
         const { userId, planId, rating, totalCaloriesBurned } = req.body;
         await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
@@ -103,7 +135,30 @@ async function submitPlanFeedback(req, res, next) {
     } catch (error) {
         next(error);
     }
+} */
+
+// ADDED, above works
+async function submitPlanFeedback(req, res, next) {
+    try {
+        const { userId, planId, rating, totalCaloriesBurned } = req.body;
+
+        // Store the feedback in the database
+        await model.storeUserPlanFeedback(userId, planId, rating, totalCaloriesBurned);
+
+        // Calculate reward based on feedback
+        const feedback = { rating, totalCaloriesBurned };
+        const reward = model.calculateReward(feedback);
+
+        // Update Q-value with feedback
+        const state = await model.getUserPreferences(userId); // Assume state is based on user preferences
+        model.updateQValue(state, planId, reward, state);
+
+        res.send({ success: true });
+    } catch (error) {
+        next(error);
+    }
 }
+
 
 module.exports = {
     getAllUsers,

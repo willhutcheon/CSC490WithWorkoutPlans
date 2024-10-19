@@ -257,6 +257,7 @@ CREATE TABLE IF NOT EXISTS workouts (
 );
 
 CREATE TABLE IF NOT EXISTS q_values (
+    user_id          INT          NOT NULL,
     state            TEXT         NOT NULL,
     action           INT          NOT NULL,
     q_value          REAL         NOT NULL,
@@ -264,6 +265,7 @@ CREATE TABLE IF NOT EXISTS q_values (
         state,
         action
     )
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS user_plan_feedback (
@@ -347,13 +349,15 @@ VALUES
 (3601, 4, 5, 1200),
 (2624, 5, 4, 500);
 
-INSERT INTO q_values (state, action, q_value)
+INSERT INTO q_values (user_id, state, action, q_value)
 VALUES
-('Strength-Beginner', 1, 1.0),
-('Endurance-Advanced', 2, 0.8),
-('Hypertrophy-Beginner', 3, 0.9),
-('Strength-Advanced', 4, 1.2),
-('Endurance-Intermediate', 5, 1.0);
+(7572, 'Strength-Beginner', 1, 1.0),
+(7572, 'Endurance-Advanced', 2, 0.8),
+(9014, 'Hypertrophy-Beginner', 3, 0.9),
+(2710, 'Strength-Advanced', 4, 1.2),
+(3601, 'Endurance-Intermediate', 5, 1.0);
+
+
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
